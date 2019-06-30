@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 
-function Button({onClickFunction, increment}) {
-  const handleClick = () => onClickFunction(increment);
+function Button({onClick, children, ...props}) {
   return (
-    <button onClick={handleClick}>
-      + {increment}
+    <button
+      onClick={onClick}
+      {...props}
+    >
+      {children}
     </button>
   );
 }
@@ -15,14 +17,28 @@ function Display({message}) {
   );
 }
 
+const toSignedString = value => `${value > 0 ? '+' : ''}${value}`;
+
 export default function App() {
   const [counter, setCounter] = useState(0);
   const incrementCounter = (incrementValue) => setCounter(counter + incrementValue);
   return (
     <div>
-      <Button onClickFunction={incrementCounter} increment={1}/>
-      <Button onClickFunction={incrementCounter} increment={5}/>
-      <Button onClickFunction={incrementCounter} increment={10}/>
+    {[
+        -10,
+        -5,
+        -1,
+        1,
+        5,
+        10
+      ].map(increment =>
+        <Button
+          key={increment}
+          onClick={() => incrementCounter(increment)}
+        >
+          {toSignedString(increment)}
+        </Button>
+      )}
       <Display message={counter} />
     </div>
   );
